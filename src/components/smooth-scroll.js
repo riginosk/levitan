@@ -33,8 +33,10 @@ componentDidMount(){
           docHeight = $('.rl-main').height();
           height = docHeight - wh;
         }
+        if (typeof window !== 'undefined') {
         window.addEventListener("resize", this.fs);
-  
+        }
+
         function Scrollboi(obj) {
             
           let winScroll = obj["scroll"]["y"],
@@ -67,8 +69,9 @@ componentDidMount(){
 }
   
   render() {
+    if (typeof window !== 'undefined') {
     window.addEventListener("resize",  this.ls);
-
+    }
     return (
       <></>
     )

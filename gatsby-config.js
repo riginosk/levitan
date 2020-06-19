@@ -62,7 +62,6 @@ module.exports = {
         //trackingId: `ADD YOUR TRACKING ID HERE`,
       }
     },
-    `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -81,7 +80,7 @@ module.exports = {
       options: {
         spaceId: `amz9mivw8uro`,
         // Learn about environment variables: https://gatsby.dev/env-vars
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        accessToken: `qaVNTOw5FOYqjKYac6-kfTAP6Pagf4WeRCGV9AFSGVw`,
       },
     },
     `gatsby-plugin-transition-link`
