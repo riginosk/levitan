@@ -1,6 +1,12 @@
+const dotenv = require('dotenv')
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config()
+}
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `Ryan Levitan`,
     author: {
       name: `Kyle Mathews`,
       summary: `who lives and works in San Francisco building useful things.`
@@ -60,22 +66,25 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Ryan Levitan`,
+        short_name: `Ryan Levitan`,
         start_url: `/`,
         background_color: `#ffffff`,
-        theme_color: `#663399`,
+        theme_color: `#000000`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`
+        icon: `content/assets/ryan-levitan-icon.png`
       }
     },
     `gatsby-plugin-react-helmet`,
     {
-      resolve: `gatsby-plugin-typography`,
+      resolve: `gatsby-source-contentful`,
       options: {
-        pathToConfigModule: `src/utils/typography`
-      }
-    }
+        spaceId: `amz9mivw8uro`,
+        // Learn about environment variables: https://gatsby.dev/env-vars
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      },
+    },
+    `gatsby-plugin-transition-link`
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
