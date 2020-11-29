@@ -23,7 +23,7 @@ class BlogPostContentfulTemplate extends React.Component {
   UNSAFE_componentWillMount() {
     
     const rememberMe = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof localStorage !== 'undefined') {
         localStorage.getItem('secretVisible');
       }
     }
