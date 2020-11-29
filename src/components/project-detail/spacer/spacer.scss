@@ -1,0 +1,7 @@
+.spacer {
+    height:90px;
+
+    @include mobile {
+        height:42px;
+    }
+}

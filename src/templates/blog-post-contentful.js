@@ -1,194 +1,112 @@
-import React from "react"
-import { graphql } from "gatsby"
-import Img from "gatsby-image"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
-import Navigation from "../components/nav"
-import Transition from "../components/transition"
+import React from "react";
+import { graphql } from 'gatsby';
+import CreateContent from "../components/create-content";
+import Password from "../components/password/password";
 
-const BlogPostContentfulTemplate = ({ data, pageContext, location }) => {
-  const post = data.contentfulPost
-  const siteTitle = data.site.siteMetadata.title
-  const { previous } = pageContext
 
-  let containers = ''
-  let backgroundColor =''
-  let textColor =''
-  let spanTitle = ''
+class BlogPostContentfulTemplate extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      password: '',
+      secretVisible: false,
+      placeholder:'Password'
+    };
+    const { data } = this.props;
+     this.passkey = data.contentfulPost.password;
 
-  if (post.backgroundColor !== null) {
-    backgroundColor = post.backgroundColor
-  } else {
-    backgroundColor = "#ffffff"
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    
   }
 
-  if (post.textColor !== null) {
-    textColor = post.textColor
-
-  } else {
-    textColor = "#000000"
+  UNSAFE_componentWillMount() {
+    
+    const rememberMe = () => {
+      if (typeof window !== 'undefined') {
+        localStorage.getItem('secretVisible');
+      }
+    }
+    this.setState({
+      secretVisible: rememberMe
+    });
   }
 
-  if (post.container !== null) {
+  checkPassword(password) {
+    if (password === this.passkey) {
+      return true;
+    }
+    return false;
+  }
 
-  containers =
-  data.contentfulPost.container
-  .map(projectEntry => {
-  if (projectEntry.__typename === 'ContentfulImageLeftBlock') {
-    if (projectEntry.rightAlign === true){
-      return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-          <div className= "rl-image-left-block rl-grid">
-            <div className='block block-right'></div>
-            <Img className="rl-image-right" key={projectEntry.image.id} fluid={projectEntry.image.fluid} />
-          </div>
-        </div>
-      )
-    } else if (projectEntry.rightAlign === false || projectEntry.rightAlign === null ){
-      return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-          <div className= "rl-image-left-block rl-grid">
-            <Img className="rl-image-left" key={projectEntry.image.id} fluid={projectEntry.image.fluid} />
-            <div className='block block-left'></div>
-          </div>
-        </div>
-      )
+  handleChange(e) {
+    e.preventDefault();
+    this.setState({
+      password: e.target.value,
+    });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    localStorage.setItem('secretVisible', this.checkPassword(this.state.password));
+    this.setState({
+      secretVisible: this.checkPassword(this.state.password),
+      password: "",
+      placeholder: "Try Again"
+    });
+    const button = document.querySelector('.protected__submit');
+    button.classList.remove("active"); 
+
+  }
+
+  render() {
+    const secretVisible = this.state.secretVisible;
+    const { pageContext } = this.props;
+    const { location } = this.props;
+    const previous = pageContext.previous;
+    const { data } = this.props;
+    const post = data.contentfulPost;
+    const siteTitle = data.site.siteMetadata.title;
+    let pageToDisplay;
+    let backgroundColor;
+    let textColor;
+
+    if (post.backgroundColor !== null) {
+      backgroundColor = post.backgroundColor;
+    } else {
+      backgroundColor = '#ffffff';
     }
-  } else if (projectEntry.__typename === 'ContentfulProjectDetails') {
-    return (
-      <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-      <div className= "rl-project-details rl-grid">
-        <div className='rl-project-info'>
-          <h3 className='rl-eyebrow'>Project Info</h3>
-          <h3>{projectEntry.childContentfulProjectDetailsProjectInfoTextNode.projectInfo}</h3>
-        </div>
-        <div className='rl-project-credits'>
-          <h3 className='rl-eyebrow'>Credits</h3>
-          <h3>{projectEntry.credits}</h3>
-        </div>
-      </div>
-    </div>
-    )
-  } else if (projectEntry.__typename === 'ContentfulFullWidthImage') {
-    if (projectEntry.imageFull.fluid !== null && projectEntry.vimeo === null ) {
-      return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-        <div className= "rl-full-width-image">
-          <Img className="rl-full-width" key={projectEntry.imageFull.id} fluid={projectEntry.imageFull.fluid} />
-        </div>
-      </div>
-      )
-    } else if ((projectEntry.imageFull.fluid === null || projectEntry.imageFull.fluid) !== null && projectEntry.vimeo !== null){
-      return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-        <div className= "rl-full-width-image">
-          <div className='embed-container'>
-            <iframe title={projectEntry.id} src={projectEntry.vimeo + '?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1'} frameBorder="0" webkitallowfullscreen="" mozallowFullScreen="" allowFullScreen="" data-ready="true"></iframe>
-          </div>
-        </div>
-      </div>
-      )
+
+    if (post.textColor !== null) {
+      textColor = post.textColor;
+    } else {
+      textColor = '#000000';
     }
-  } else if (projectEntry.__typename === 'ContentfulTwoImages') {
-    if (projectEntry.rightAlign === true){
+
+    if (post.passwordProtect === true) {
+      if (secretVisible) {
+        pageToDisplay = <CreateContent post={post} location={location} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
+      }
+      else {
+        pageToDisplay = <Password password={this.state.password} placeholder={this.state.placeholder} post={post} siteTitle={siteTitle} textColor={textColor} backgroundColor={backgroundColor} onChange={this.handleChange} onSubmit={this.handleSubmit} />;
+      }
       return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-          <div className= "rl-two-images rl-grid">
-            <Img className="rl-col-1-9" key={projectEntry.image2.id} fluid={projectEntry.image2.fluid} />
-            <Img className="rl-col-9-13" key={projectEntry.image1.id} fluid={projectEntry.image1.fluid} />
-          </div>
-        </div>
-      )
-    } else if (projectEntry.rightAlign === false || projectEntry.rightAlign === null ){
+        <>
+          {pageToDisplay}
+        </>
+      );
+    } else if (post.passwordProtect === false || post.passwordProtect === null) {
+        pageToDisplay = <CreateContent post={post} location={location} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
       return (
-        <div key={projectEntry.id} className ="rl-contain rl-module-spacer">
-          <div className= "rl-two-images rl-grid">
-            <Img className="rl-col-1-9" key={projectEntry.image1.id} fluid={projectEntry.image1.fluid} />
-            <Img className="rl-col-9-13" key={projectEntry.image2.id} fluid={projectEntry.image2.fluid} />
-          </div>
-        </div>
-      )   
+        <>
+          {pageToDisplay}
+        </>
+      );
     }
   }
-  return (
-    <></>
-  )
-})
-  }
-
-  return (
-    <Layout location={location} title={siteTitle}>
-      <SEO
-        title={post.title}
-        description={post.subtitle || post.excerpt}
-      />
-      <Navigation color={textColor} blendmode={"normal"}/>
-
-      <div className="rl-main-container" data-scroll-container>
-        <article style={{backgroundColor: backgroundColor, color:textColor }} className="project-detail">
-          <header>
-            <div className="hero-container rl-contain">
-              <div className="rl-right-text">
-                <h1 className="rl-project-year">{post.year}</h1>
-                <div style={{backgroundColor: textColor}} className="dash"></div>
-              </div>
-              <div className="rl-project-title">
-                <h1>{post.title}</h1>
-              </div>
-            </div>
-          </header>
-          <div className="project-content">
-            {containers}
-          </div>
-        </article>
-
-        <div className="rl-transporter">
-          {previous && (
-              <>
-              {(() => {
-              if (previous.title !== null){
-              var str = `${previous.title}`;
-              function wrapWords(str, tmpl) {
-                return str.replace(/\S+\s*/g, tmpl || "<div>$&</div><br>");
-              }
-              spanTitle = wrapWords(str);
-              }
-            })()}
-            
-              <Transition to={`/${previous.slug}`} color={"#ffffff"} background={"#000000"}>
-              <div className="hero-container rl-contain">
-                    <h1>Next</h1>
-                    <div className="rl-arrow">
-                      <svg width="140" height="114" viewBox="0 0 140 114" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M87.9756 0C87.9756 28.225 111.287 51.2109 139.628 51.2109V62.7891C111.287 62.7891 87.9756 85.775 87.9756 114H76.3975C76.3975 92.8127 87.0426 74.1114 103.203 62.7462H0V51.2578H103.209C87.0451 39.893 76.3975 21.1898 76.3975 0H87.9756Z" fill="white"/>
-                      </svg>
-                    </div>
-                <div className="rl-grid rl-next-project-container">
-                  <img className="rl-next-project-image" src={previous.image.fluid.src} alt={previous.title} />
-
-                  <div className="rl-next-project">
-                    <div className="rl-right-text">
-                      <h1>{previous.year}</h1>
-                    </div>
-                    <h1 className="rl-next-project-title">
-                    <div className="rl-span-title" dangerouslySetInnerHTML={{__html: spanTitle}}></div>
-                    </h1>
-                  </div>
-                </div>
-
-              </div>
-              </Transition>
-              </>
-          )}
-        </div>
-      </div>
-
-    </Layout>
-  )
 }
 
-export default BlogPostContentfulTemplate
-
+export default BlogPostContentfulTemplate;
 export const pageQuery = graphql`
   query ContentfulBlogPostBySlug($slug: String!) {
     site {
@@ -198,8 +116,10 @@ export const pageQuery = graphql`
     }
     contentfulPost( slug: {eq: $slug }) {
       title
-      subtitle
       year
+      credits
+      passwordProtect
+      password
       backgroundColor
       textColor
       image {
@@ -208,6 +128,23 @@ export const pageQuery = graphql`
         }
       }
       container {
+          ... on ContentfulSpacer {
+            spaceAmount
+            id
+          }
+          ... on ContentfulSmallText {
+            childContentfulSmallTextSmallTextTextNode {
+              smallText
+            }
+            indent
+            id
+          }
+          ... on ContentfulLargeText {
+            id
+            childContentfulLargeTextLargeTextTextNode {
+              largeText
+            }
+          }
           ... on ContentfulImageLeftBlock {
             internal {
               type
@@ -217,16 +154,14 @@ export const pageQuery = graphql`
               fluid {
                 ...GatsbyContentfulFluid
               }
+              file {
+                contentType
+                url
+              }
               id
             }
+            scrollTrigger
             id
-          }
-          ... on ContentfulProjectDetails {
-            id
-            childContentfulProjectDetailsProjectInfoTextNode {
-              projectInfo
-            }
-            credits
           }
           ... on ContentfulFullWidthImage {
             id
@@ -235,15 +170,24 @@ export const pageQuery = graphql`
               fluid {
                 ...GatsbyContentfulFluid
               }
+              file {
+                contentType
+                url
+              }
               id
             }
           }
         ... on ContentfulTwoImages {
           id
           rightAlign
+          pin
           image1 {
             fluid {
               ...GatsbyContentfulFluid
+            }
+            file {
+              contentType
+              url
             }
             id
           }
@@ -251,11 +195,14 @@ export const pageQuery = graphql`
             fluid {
               ...GatsbyContentfulFluid
             }
+            file {
+              contentType
+              url
+            }
             id
           }
         }
       }
     }
   }
-`
-
+`;

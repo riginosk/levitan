@@ -1,20 +1,18 @@
-const dotenv = require('dotenv')
-
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config()
-}
+require('dotenv').config({
+  path: `.env`
+})
 
 module.exports = {
   siteMetadata: {
     title: `Ryan Levitan`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`
+      name: `Ryan Levitan`,
+      summary: `Digital Designer`
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `Digital Designer`,
     siteUrl: `https://gatsby-starter-blog-demo.netlify.app/`,
     social: {
-      twitter: `kylemathews`
+      twitter: `rlevitan`
     }
   },
   plugins: [
@@ -39,7 +37,8 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 590
+              maxWidth: 1440,
+              quality: 90
             }
           },
           {
@@ -80,10 +79,12 @@ module.exports = {
       options: {
         spaceId: `amz9mivw8uro`,
         // Learn about environment variables: https://gatsby.dev/env-vars
-        accessToken: `qaVNTOw5FOYqjKYac6-kfTAP6Pagf4WeRCGV9AFSGVw`,
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
       },
     },
-    `gatsby-plugin-transition-link`
+    `gatsby-plugin-transition-link`,
+    `gatsby-plugin-flow`,
+    `gatsby-plugin-sass`,
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
