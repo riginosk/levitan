@@ -6,6 +6,7 @@ import ProjectHeader from "../project-detail/project-header/project-header";
 
 const Password = (props) => {
     const post = props.post;
+    const location = props.location;
     const siteTitle = props.siteTitle;
     const textColor = props.textColor;
     const backgroundColor = props.backgroundColor;
@@ -26,7 +27,7 @@ useEffect(() => {
 },[])
 
     return (
-        <Layout title={siteTitle}>
+        <Layout location={location} title={siteTitle}>
             <SEO
                 title={post.title}
                 description={post.subtitle || post.excerpt}
