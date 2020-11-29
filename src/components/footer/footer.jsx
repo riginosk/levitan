@@ -30,8 +30,10 @@ const Footer = () => {
 
   const footer = data.allContentfulFooter.edges[0].node;
   const { footerLinks } = footer;
-  const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
-
+  let touch;
+  if (typeof matchMedia !== 'undefined') {
+   touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+  }
   useEffect(() => {
     if (!touch) {
 
