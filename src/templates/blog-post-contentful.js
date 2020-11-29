@@ -21,11 +21,10 @@ class BlogPostContentfulTemplate extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    
-    const rememberMe = () => {
-      if (typeof localStorage !== 'undefined') {
-        localStorage.getItem('secretVisible');
-      }
+    let rememberMe;
+   
+    if (typeof localStorage !== 'undefined') {
+        rememberMe = localStorage.getItem('secretVisible');
     }
     this.setState({
       secretVisible: rememberMe
@@ -62,7 +61,6 @@ class BlogPostContentfulTemplate extends React.Component {
   render() {
     const secretVisible = this.state.secretVisible;
     const { pageContext } = this.props;
-    const { location } = this.props;
     const previous = pageContext.previous;
     const { data } = this.props;
     const post = data.contentfulPost;
@@ -85,7 +83,7 @@ class BlogPostContentfulTemplate extends React.Component {
 
     if (post.passwordProtect === true) {
       if (secretVisible) {
-        pageToDisplay = <CreateContent post={post} location={location} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
+        pageToDisplay = <CreateContent post={post} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
       }
       else {
         pageToDisplay = <Password password={this.state.password} placeholder={this.state.placeholder} post={post} siteTitle={siteTitle} textColor={textColor} backgroundColor={backgroundColor} onChange={this.handleChange} onSubmit={this.handleSubmit} />;
@@ -96,7 +94,7 @@ class BlogPostContentfulTemplate extends React.Component {
         </>
       );
     } else if (post.passwordProtect === false || post.passwordProtect === null) {
-        pageToDisplay = <CreateContent post={post} location={location} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
+        pageToDisplay = <CreateContent post={post} previous={previous} textColor={textColor} backgroundColor={backgroundColor} siteTitle={siteTitle} />
       return (
         <>
           {pageToDisplay}

@@ -16,14 +16,13 @@ import Transporter from "./project-detail/transporter/transporter";
 
 const CreateContent = (props) => {
     const post = props.post;
-    const location = props.location;
     const siteTitle = props.siteTitle;
     const textColor = props.textColor;
     const backgroundColor = props.backgroundColor;
     const previous = props.previous;
     let scroller;
     if (typeof document !== 'undefined') {
-      scroller = document.querySelector('.scroll-container');
+     scroller = document.querySelector('.scroll-container');
     }
     const scrollbar = Scrollbar.get(scroller);
     let containers;
@@ -34,7 +33,7 @@ const CreateContent = (props) => {
 
                 if (projectEntry.__typename === 'ContentfulImageLeftBlock') {
                     return (
-                        <ImageBlock key={projectEntry.id} location={location} scrollbar={scrollbar} scroller={scroller} projectEntry={projectEntry} />
+                        <ImageBlock key={projectEntry.id} scrollbar={scrollbar} scroller={scroller} projectEntry={projectEntry} />
                     );
                 } else if (projectEntry.__typename === 'ContentfulProjectDetails') {
                     return (
@@ -46,7 +45,7 @@ const CreateContent = (props) => {
                     );
                 } else if (projectEntry.__typename === 'ContentfulTwoImages') {
                     return (
-                        <TwoImages key={projectEntry.id} location={location} scrollbar={scrollbar} scroller={scroller} projectEntry={projectEntry} />
+                        <TwoImages key={projectEntry.id} scrollbar={scrollbar} scroller={scroller} projectEntry={projectEntry} />
                     );
                 } else if (projectEntry.__typename === 'ContentfulLargeText') {
                     return (
@@ -66,7 +65,7 @@ const CreateContent = (props) => {
             });
     }
     return (
-        <Layout location={location} title={siteTitle}>
+        <Layout title={siteTitle}>
             <SEO title={post.title} description={post.subtitle || post.excerpt} />
             <SmoothScroll color={textColor} >
                 <article style={{ backgroundColor, color: textColor }} className="project-detail">

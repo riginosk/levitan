@@ -13,7 +13,6 @@ const ImageBlock = (props) => {
 
     const scrollbar = props.scrollbar;
     const scroller = props.scroller;
-    const location = props.location;
     const scrollTrigger = projectEntry.scrollTrigger;
     let trigger;
 

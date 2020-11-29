@@ -10,7 +10,6 @@ const TwoImages = (props) => {
     const projectEntry = props.projectEntry;
     const scrollbar = props.scrollbar;
     const scroller = props.scroller;
-    const location = props.location;
     const contentTypeImage1 = projectEntry.image1.file.contentType;
     const urlImage1 = projectEntry.image1.file.url;
     const contentTypeImage2 = projectEntry.image1.file.contentType;

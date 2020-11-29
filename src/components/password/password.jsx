@@ -26,7 +26,7 @@ useEffect(() => {
 },[])
 
     return (
-        <Layout location={location} title={siteTitle}>
+        <Layout title={siteTitle}>
             <SEO
                 title={post.title}
                 description={post.subtitle || post.excerpt}
